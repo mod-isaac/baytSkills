@@ -1,0 +1,7 @@
+MySQLdb
+psycopg2
+nltk
+sklearn
+ProgressBar
+pyramid
+wsgiref

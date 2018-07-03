@@ -1,0 +1,6 @@
+baytSkills/__init__.py
+baytSkills.egg-info/PKG-INFO
+baytSkills.egg-info/SOURCES.txt
+baytSkills.egg-info/dependency_links.txt
+baytSkills.egg-info/not-zip-safe
+baytSkills.egg-info/top_level.txt

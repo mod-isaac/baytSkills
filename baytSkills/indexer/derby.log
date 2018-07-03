@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Thu Jun 21 17:53:33 EEST 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0164-22d6-170f-000008e93b40 
+on database directory /home/mfayoumi/baytSkills/baytSkills/indexer/metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@5e8ac028 
+Loaded from file:/home/mfayoumi/spark-2.3.1-bin-hadoop2.7/jars/derby-10.12.1.1.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_171-b11
+user.dir=/home/mfayoumi/baytSkills/baytSkills/indexer
+os.name=Linux
+os.arch=amd64
+os.version=4.4.0-62-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
