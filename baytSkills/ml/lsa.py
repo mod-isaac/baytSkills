@@ -28,3 +28,4 @@ def SVDFetcher():
     for key,val in insertingClusters.items():
         dictList.append({'cluster':val})
     return dictList
+    ###
