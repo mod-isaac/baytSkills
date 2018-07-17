@@ -146,7 +146,7 @@ def entry_point():
     config.add_view(title2title, route_name='titles',renderer='json')
 
     app = config.make_wsgi_app()
-    server = make_server('0.0.0.0', 8080, app)
+    server = make_server('0.0.0.0', 8001, app)
     server.serve_forever()
 
 entry_point()

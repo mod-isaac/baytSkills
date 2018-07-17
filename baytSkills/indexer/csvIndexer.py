@@ -1,5 +1,6 @@
 ## CREATE MONGO INDEXIS
 import pandas as pd
+import pymongo
 from pymongo import MongoClient
 import threading
 from threading import Thread
@@ -7,23 +8,56 @@ from multiprocessing import Process
 import time, sys
 sys.path.append('../nlp')
 sys.path.append('../connections')
+import os
+from pathlib import Path
 
 import datacleaining
 import connectionsmanager
 import connectionsinfo
 ###########
+home                    = str(Path.home())
 client                  = connectionsmanager.connManager.mongodbConnectionInfo()
 db                      = client[connectionsmanager.connManager.MONGO_DB]
 skillsCollName          = connectionsinfo.MONGO_SKILLS_TEMP
 experincesCollName      = connectionsinfo.MONGO_EXPS_TEMP
 pandasChunkSize         = connectionsinfo.CSV_BATCH_LIMIT
 CSVAggrigationLimit     = connectionsinfo.AGGRIGATION_LIMIT
-skillsFileName          = connectionsinfo.SKILLS_CSV
-experincesFileName      = connectionsinfo.EXPERINCE_CSV
-
+skillsFileName          = home+'/'+connectionsinfo.SKILLS_CSV
+experincesFileName      = home+'/'+connectionsinfo.EXPERINCE_CSV
+joinedCSVFileName       = home+'/'+connectionsinfo.JOINED_CSV
 ###########
 skillsFiledName     = "skills"
 experincesFiledName = "experinces"
+def csvSplitter():
+    try:
+        os.remove(skillsFileName)
+    except Exception as e:
+        pass
+    try:
+        os.remove(experincesFileName)
+    except Exception as e:
+        pass
+
+
+    df = pd.read_csv(joinedCSVFileName)
+    df.columns = ['cv_id','skill_name','exp_title']
+
+    skills_df = df[['cv_id','skill_name']]
+    skills_df.to_csv('skills.csv', sep=',', encoding='utf-8',index = False)
+
+    exp_df = df[['cv_id','exp_title']]
+    exp_df.to_csv('experinces.csv', sep=',', encoding='utf-8',index = False)
+
+    skills_df = pd.read_csv('skills.csv')
+    skills_df.drop_duplicates(subset=None, inplace=True)
+    skills_df.to_csv(skillsFileName, sep=',', encoding='utf-8',index = False)
+
+    exp_df = pd.read_csv('experinces.csv')
+    exp_df.drop_duplicates(subset=None, inplace=True)
+    exp_df.to_csv(experincesFileName, sep=',', encoding='utf-8',index = False)
+
+    os.remove('experinces.csv')
+    os.remove('skills.csv')
 
 
 def csvToMongo(fileName,collName,field):
@@ -105,6 +139,12 @@ def mongoAddBatch(collName,batch,Jbatch):
 
 def parallelMongoOpes(collName,delIDs,addBatch,JaddBatch):
     mongoAddBatch(collName,addBatch,JaddBatch)
+    collection          = db[collName]
+    aggCollection       = db[collName+'_agg']
+    cleanCollection     = db[collName+'_clean']
+    collection.create_index([("id", pymongo.ASCENDING)])
+    aggCollection.create_index([("id", pymongo.ASCENDING)])
+    cleanCollection.create_index([("doc_id", pymongo.ASCENDING)])
     mongoRemoveByDocID(collName,delIDs)
 
 def idsAggregator(collName,field):
@@ -177,7 +217,9 @@ def insertingAggregated(collName,field):
 def csvToMongoOps(filename,collection,field):
     csvToMongo(filename,collection,field)
     insertingAggregated(collection,field)
-if __name__ == '__main__':
+
+def indexCSVFormat():
+    csvSplitter()
     Pros = []
     skills      =   Thread(target = csvToMongoOps, args=(skillsFileName,skillsCollName,skillsFiledName,))
     experinces  =   Thread(target = csvToMongoOps, args=(experincesFileName,experincesCollName,experincesFiledName,))

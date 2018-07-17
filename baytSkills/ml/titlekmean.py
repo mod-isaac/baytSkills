@@ -27,7 +27,7 @@ except Exception as e:
     documents = list(rawDocuments.values())
     docsList  = list(rawDocuments.keys())
 
-nclusters   =   connectionsinfo.KMEAN_NCLUSTERS
+nclusters   =   int(rawDocumentsLen*0.4)
 def word_tokenizer(text):
         tokens = word_tokenize(text)
         return tokens

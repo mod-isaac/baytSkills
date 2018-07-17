@@ -74,7 +74,7 @@ def insertSkillsKmeanDocsBulck(bulkLimit=50):
             tempBulckList.append(rawsBatch)
         kmean_docs_collection.insert_many(tempBulckList)
         initBacth = initBacth + bulkLimit
-
+    kmean_docs_collection.create_index([("cluster", pymongo.ASCENDING)])
 def insertRawSkillsToClusters():
     SOURCE_LEN  = kmean_docs_collection.count()
     DIST_LEN    = 0
