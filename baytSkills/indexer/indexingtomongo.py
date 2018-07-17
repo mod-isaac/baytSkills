@@ -109,6 +109,8 @@ def insertTitlesWithSkills():
             except Exception as e:
                 pass
         DIST_LEN    = tit_ski_clus_collection.count()
+        tit_ski_clus_collection.create_index([("skills", pymongo.TEXT),
+                                            ("title", pymongo.TEXT)])
 ###########################################################
 def cvsToMongo():
     import pandas as pd
@@ -126,17 +128,12 @@ def cvsToMongo():
             c.append({'index_id':j, 'doc_id':i[0], 'skill':i[1]})
             j = j + 1
         print(c)
-#insertRawSkillsBulck()
-#insertSkillsTFIDFBulck()
-#insertSkillsSVDFBulck()
-#insertSkillsKmeanBulck()
-import time
-start_time = time.time()
-insertSkillsKmeanDocsBulck()
-print("--- %s seconds ---" % (time.time() - start_time))
-insertRawSkillsToClusters()
-print("--- %s seconds ---" % (time.time() - start_time))
-insertTitlesWithSkills()
-print("--- %s seconds ---" % (time.time() - start_time))
-#insertRawSkillsToClusters()
-#insertTitlesWithSkills()
+def IndexProcessedData():
+    import time
+    start_time = time.time()
+    insertSkillsKmeanDocsBulck()
+    print("--- %s seconds ---" % (time.time() - start_time))
+    insertRawSkillsToClusters()
+    print("--- %s seconds ---" % (time.time() - start_time))
+    insertTitlesWithSkills()
+    print("--- %s seconds ---" % (time.time() - start_time))
