@@ -2,23 +2,41 @@ import datapreparing
 import pymongo
 from pymongo import MongoClient
 import sys
-sys.path.append('../connections')
-sys.path.append('../ml')
-sys.path.append('../nlp')
+sys.path.append('/bayt/software/app/baytSkills/connections')
+import mongoConfig
 import connectionsmanager
 import datapreprocessing
+
+root_path = mongoConfig.ROOT_PATH
+
+nlp_path    = root_path+'nlp'
+sys.path.append(nlp_path)
+ml_path = root_path+'ml'
+sys.path.append(ml_path)
+log_path =  root_path+'logs/skillsServiceLog.log'
+
 from pymongo import MongoClient
 
-client                  = connectionsmanager.connManager.mongodbConnectionInfo()
-db                      = client[connectionsmanager.connManager.MONGO_DB]
-raw_collection          = db[connectionsmanager.connManager.MONGO_RAW_COLL]
-tfidf_collection        = db[connectionsmanager.connManager.MONGO_TFIDF_COLL]
-svd_collection          = db[connectionsmanager.connManager.MONGO_SVD_COLL]
-kmean_collection        = db[connectionsmanager.connManager.MONGO_KMEAN_COLL]
-kmean_docs_collection   = db[connectionsmanager.connManager.MONGO_KMEAN_DOCS_COLL]
-skills_clus_collection  = db[connectionsmanager.connManager.MONGO_SKILLS_CLUS_COLL]
-titles_clus_collection  = db[connectionsmanager.connManager.MONGO_TITLES_CLUS_COLL]
-tit_ski_clus_collection = db[connectionsmanager.connManager.MONGO_TITLES_SKILS_COLL]
+import logging
+logging.basicConfig(filename=log_path, level=logging.DEBUG,format='%(asctime)s - %(levelname)s - %(name)s - %(message)s')
+logger=logging.getLogger(__name__)
+
+try:
+    client                      = connectionsmanager.connManager.mongodbConnectionInfo()
+    client_R                    = connectionsmanager.connManager.mongodbConnectionInfo_R()
+    db                          = client[connectionsmanager.mongoConfig.MONGO_POOL]
+    db_R                        = client_R[connectionsmanager.mongoConfig.MONGO_POOL_R]
+    raw_collection              = db[connectionsmanager.connManager.MONGO_RAW_COLL]
+    tfidf_collection            = db[connectionsmanager.connManager.MONGO_TFIDF_COLL]
+    svd_collection              = db[connectionsmanager.connManager.MONGO_SVD_COLL]
+    kmean_collection            = db[connectionsmanager.connManager.MONGO_KMEAN_COLL]
+    kmean_docs_collection       = db[connectionsmanager.connManager.MONGO_KMEAN_DOCS_COLL]
+    skills_clus_collection      = db[connectionsmanager.connManager.MONGO_SKILLS_CLUS_COLL]
+    titles_clus_collection      = db[connectionsmanager.connManager.MONGO_TITLES_CLUS_COLL]
+    tit_ski_clus_collection     = db[connectionsmanager.connManager.MONGO_TITLES_SKILS_COLL]
+    tit_ski_clus_collection_R   = db_R[connectionsmanager.connManager.MONGO_TITLES_SKILS_COLL]
+except Exception as e:
+    logger.critical(str(e))
 
 
 def insertRawSkillsBulck(bulkLimit=50):
@@ -80,6 +98,8 @@ def insertRawSkillsToClusters():
     DIST_LEN    = 0
     from bson.objectid import ObjectId
     while (SOURCE_LEN > DIST_LEN):
+        msg = "insertRawSkillsToClusters >>>", DIST_LEN
+        logger.debug(msg)
         mongoIDS = datapreprocessing.getMongoIds(kmean_docs_collection,1)
         for id in mongoIDS:
             IdsCluster = list(kmean_docs_collection.find({"_id": ObjectId(id)},{"_id":False}))
@@ -96,6 +116,8 @@ def insertTitlesWithSkills():
     SOURCE_LEN  = kmean_docs_collection.count()
     DIST_LEN    = 0
     while (SOURCE_LEN > DIST_LEN):
+        msg = "insertTitlesWithSkills >>>", DIST_LEN
+        print(msg)
         mongoIDS    = datapreprocessing.getMongoIds(kmean_docs_collection,2)
         for id in mongoIDS:
             try:
@@ -106,6 +128,7 @@ def insertTitlesWithSkills():
                 for id in IdsList:
                     mongoBulk = datapreprocessing.getCVstitlesWithSkills(id)
                     tit_ski_clus_collection.insert_one(mongoBulk)
+                    tit_ski_clus_collection_R.insert_one(mongoBulk)
             except Exception as e:
                 pass
         DIST_LEN    = tit_ski_clus_collection.count()
@@ -131,9 +154,21 @@ def cvsToMongo():
 def IndexProcessedData():
     import time
     start_time = time.time()
-    insertSkillsKmeanDocsBulck()
-    print("--- %s seconds ---" % (time.time() - start_time))
-    insertRawSkillsToClusters()
-    print("--- %s seconds ---" % (time.time() - start_time))
-    insertTitlesWithSkills()
-    print("--- %s seconds ---" % (time.time() - start_time))
+    try:
+        cleanSkillColl          = db[connectionsmanager.connManager.MONGO_RAW_COLL]
+        mongoThread = cleanSkillColl.count({"status": {"$ne":"yes"}})
+        while (mongoThread > 0):
+            insertSkillsKmeanDocsBulck()
+            mongoThread = cleanSkillColl.count({"status": {"$ne":"yes"}})
+    except Exception as e:
+        logger.critical(str(e))
+
+    try:
+        insertRawSkillsToClusters()
+    except Exception as e:
+        logger.critical(str(e))
+
+    try:
+        insertTitlesWithSkills()
+    except Exception as e:
+        logger.critical(str(e))

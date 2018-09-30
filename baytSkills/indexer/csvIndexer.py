@@ -6,14 +6,24 @@ import threading
 from threading import Thread
 from multiprocessing import Process
 import time, sys
-sys.path.append('../nlp')
+#sys.path.append('/bayt/software/app/baytSkills/connections')
 sys.path.append('../connections')
+import connectionsmanager
+import connectionsinfo
+import mongoConfig
+root_path   = mongoConfig.ROOT_PATH
+nlp_path    = root_path+'nlp'
+sys.path.append(nlp_path)
+log_path =  root_path+'logs/skillsServiceLog.log'
+
 import os
 from pathlib import Path
 
+import logging
+logging.basicConfig(filename=log_path, level=logging.DEBUG,format='%(asctime)s - %(levelname)s - %(name)s - %(message)s')
+logger=logging.getLogger(__name__)
+
 import datacleaining
-import connectionsmanager
-import connectionsinfo
 ###########
 home                    = str(Path.home())
 client                  = connectionsmanager.connManager.mongodbConnectionInfo()
@@ -22,9 +32,9 @@ skillsCollName          = connectionsinfo.MONGO_SKILLS_TEMP
 experincesCollName      = connectionsinfo.MONGO_EXPS_TEMP
 pandasChunkSize         = connectionsinfo.CSV_BATCH_LIMIT
 CSVAggrigationLimit     = connectionsinfo.AGGRIGATION_LIMIT
-skillsFileName          = home+'/'+connectionsinfo.SKILLS_CSV
-experincesFileName      = home+'/'+connectionsinfo.EXPERINCE_CSV
-joinedCSVFileName       = home+'/'+connectionsinfo.JOINED_CSV
+skillsFileName          = '/'+connectionsinfo.SKILLS_CSV
+experincesFileName      = '/'+connectionsinfo.EXPERINCE_CSV
+joinedCSVFileName       = '/'+mongoConfig.JOINED_CSV
 ###########
 skillsFiledName     = "skills"
 experincesFiledName = "experinces"
@@ -32,11 +42,11 @@ def csvSplitter():
     try:
         os.remove(skillsFileName)
     except Exception as e:
-        pass
+         logger.critical(str(e))
     try:
         os.remove(experincesFileName)
     except Exception as e:
-        pass
+         logger.critical(str(e))
 
 
     df = pd.read_csv(joinedCSVFileName)
@@ -70,20 +80,22 @@ def csvToMongo(fileName,collName,field):
         if collection.find({}).count() == 0 and collName in db.collection_names():
             collection.insert({"delete":"1"})
     except Exception as e:
-        pass
+         logger.critical(str(e))
     try:
         status = list (collection.find({},{"_id":False}))
         if status[0]['delete'] == '1':
             return
     except Exception as e:
-        pass
+         logger.critical(str(e))
     try:
         maxID = collection.find_one(sort=[("index_id", -1)])["index_id"]
     except Exception as e:
         maxID = 0
     df = pd.read_csv(file,encoding='utf-8', header=None,error_bad_lines=False)
     if len(df.index) == maxID + 1:
-        print("Congrats ", fileName, " INSERTED to Mongo")
+        msg = "Congrats ", fileName, " INSERTED to Mongo"
+        logger.debug(msg)
+        pass
     else:
         for df in pd.read_csv(file, chunksize=chunksize, iterator=True, encoding='utf-8', header=None,error_bad_lines=False):
             frameList = df.iloc[:]
@@ -98,17 +110,19 @@ def csvToMongo(fileName,collName,field):
                         id = int(i[0])
                         insertList.append({'index_id':maxID, 'doc_id':id, field:i[1]})
                     except Exception as e:
-                        pass
+                         logger.critical(str(e))
             if len(insertList) > 0:
                 try:
                     collection.insert_many(insertList)
                 except Exception as e:
-                    pass
+                     logger.critical(str(e))
 
 def mongoRemoveByDocID(collName,delIDs):
     collection = db[collName]
     collection.delete_many({"doc_id":{"$in":delIDs}})
-    print(collName, ' >>>>>> ' , collection.find({}).count())
+    msg = collName, ' >>>>>> ' , collection.find({}).count()
+    logger.debug(msg)
+    pass
 
 def mongoAddBatch(collName,batch,Jbatch):
     collectionName = collName + "_agg"
@@ -118,7 +132,7 @@ def mongoAddBatch(collName,batch,Jbatch):
     try:
         collection.insert_many(batch)
     except Exception as e:
-        pass
+         logger.critical(str(e))
     if collName == skillsCollName:
         JMongoList = []
         cleanCollName = collName + "_clean"
@@ -130,12 +144,12 @@ def mongoAddBatch(collName,batch,Jbatch):
                 tempJMongoDict['skills'] = datacleaining.textCleaner(i['skills'])
                 JMongoList.append(tempJMongoDict)
             except Exception as e:
-                pass
+                 logger.critical(str(e))
         if len(JMongoList):
             try:
                 collection.insert_many(JMongoList)
             except Exception as e:
-                pass
+                 logger.critical(str(e))
 
 def parallelMongoOpes(collName,delIDs,addBatch,JaddBatch):
     mongoAddBatch(collName,addBatch,JaddBatch)
@@ -162,7 +176,7 @@ def idsAggregator(collName,field):
             try:
                 idsList.append(id['doc_id'])
             except Exception as e:
-                pass
+                 logger.critical(str(e))
         uniqueIds = list(set(idsList))
         if len(uniqueIds) == batchLimit:
             interrupter = interrupter + 1
@@ -194,7 +208,7 @@ def idsAggregator(collName,field):
             try:
                 JtempDict[field] = ' '.join(tempList)
             except Exception as e:
-                pass
+                 logger.critical(str(e))
         tempDict[field] = tempList
         if len(tempList):
             tempDict['id'] = id

@@ -1,0 +1,88 @@
+2018-08-13 11:44:42,401 - DEBUG - __main__ - skill2skill Logging
+2018-08-13 11:44:43,299 - DEBUG - __main__ - skill2skill Logging
+2018-08-13 11:45:14,144 - DEBUG - __main__ - skill2skill Logging
+2018-08-13 11:47:34,240 - DEBUG - __main__ - skill2skill Logging
+2018-08-13 11:48:08,286 - DEBUG - __main__ - skill2skill Logging
+2018-08-13 11:48:31,959 - DEBUG - __main__ - skill2skill Logging
+2018-08-13 11:49:26,561 - DEBUG - __main__ - skill2skill Logging
+2018-08-13 11:50:25,328 - DEBUG - __main__ - skill2titles Logging
+2018-08-13 11:50:25,374 - CRITICAL - __main__ - name 'cleanedTitles' is not defined
+2018-08-13 11:50:30,339 - DEBUG - __main__ - skill2titles Logging
+2018-08-13 11:50:30,350 - CRITICAL - __main__ - name 'cleanedTitles' is not defined
+2018-08-13 11:50:36,565 - DEBUG - __main__ - skill2titles Logging
+2018-08-13 11:50:36,576 - CRITICAL - __main__ - name 'cleanedTitles' is not defined
+2018-08-13 11:50:59,730 - DEBUG - __main__ - skill2titles Logging
+2018-08-13 11:50:59,745 - CRITICAL - __main__ - name 'cleanedTitles' is not defined
+2018-08-13 11:51:05,230 - DEBUG - __main__ - skill2titles Logging
+2018-08-13 11:51:05,243 - CRITICAL - __main__ - name 'cleanedTitles' is not defined
+2018-08-13 11:51:55,874 - DEBUG - __main__ - skill2titles Logging
+2018-08-13 11:51:59,969 - DEBUG - __main__ - skill2titles Logging
+2018-08-13 11:53:04,879 - DEBUG - __main__ - title2skills Logging
+2018-08-13 11:53:04,893 - CRITICAL - __main__ - 'list' object has no attribute 'items'
+2018-08-13 11:53:12,406 - DEBUG - __main__ - title2skills Logging
+2018-08-13 11:53:12,419 - CRITICAL - __main__ - 'list' object has no attribute 'items'
+2018-08-13 11:54:07,430 - DEBUG - __main__ - title2skills Logging
+2018-08-13 11:54:18,971 - DEBUG - __main__ - title2skills Logging
+2018-08-13 11:55:11,558 - DEBUG - __main__ - title2titles Logging
+2018-08-13 12:46:47,912 - DEBUG - __main__ - title2titles Logging
+2018-08-13 14:31:20,623 - DEBUG - __main__ - title2titles Logging
+2018-08-13 14:38:58,606 - DEBUG - __main__ - title2titles Logging
+2018-08-13 14:39:26,195 - DEBUG - __main__ - title2titles Logging
+2018-08-13 14:40:38,651 - DEBUG - __main__ - title2titles Logging
+2018-08-13 14:55:55,924 - DEBUG - __main__ - title2titles Logging
+2018-08-13 14:57:00,173 - DEBUG - __main__ - title2titles Logging
+2018-08-16 14:13:53,118 - DEBUG - __main__ - title2titles Logging
+2018-08-16 14:14:19,538 - DEBUG - __main__ - title2titles Logging
+2018-09-04 15:03:08,971 - DEBUG - __main__ - skill2skill Logging
+2018-09-04 15:59:09,613 - DEBUG - __main__ - skill2skill Logging
+2018-09-13 11:50:31,782 - DEBUG - __main__ - skill2skill Logging
+2018-09-13 11:50:41,605 - DEBUG - __main__ - title2titles Logging
+2018-09-13 11:51:31,319 - DEBUG - __main__ - title2titles Logging
+2018-09-13 11:52:55,262 - DEBUG - __main__ - title2titles Logging
+2018-09-13 12:04:45,421 - DEBUG - __main__ - title2titles Logging
+2018-09-13 12:05:18,052 - DEBUG - __main__ - title2titles Logging
+2018-09-13 12:05:50,555 - DEBUG - __main__ - title2titles Logging
+2018-09-13 12:06:02,410 - DEBUG - __main__ - title2titles Logging
+2018-09-24 16:46:32,244 - DEBUG - __main__ - skill2skill Logging
+2018-09-24 16:46:55,338 - DEBUG - __main__ - title2titles Logging
+2018-09-24 16:47:10,981 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:12:36,682 - DEBUG - __main__ - skill2skill Logging
+2018-09-25 11:12:48,245 - DEBUG - __main__ - skill2skill Logging
+2018-09-25 11:12:52,686 - DEBUG - __main__ - skill2skill Logging
+2018-09-25 11:13:13,104 - DEBUG - __main__ - skill2skill Logging
+2018-09-25 11:14:29,651 - DEBUG - __main__ - skill2skill Logging
+2018-09-25 11:14:30,124 - DEBUG - __main__ - skill2skill Logging
+2018-09-25 11:14:51,132 - DEBUG - __main__ - skill2skill Logging
+2018-09-25 11:15:00,294 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:15:35,104 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:15:35,161 - CRITICAL - __main__ - 'list' object has no attribute 'items'
+2018-09-25 11:15:55,537 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:23:21,900 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:23:21,960 - CRITICAL - __main__ - unhashable type: 'slice'
+2018-09-25 11:24:01,378 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:24:01,434 - CRITICAL - __main__ - unhashable type: 'slice'
+2018-09-25 11:24:39,332 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:24:39,389 - CRITICAL - __main__ - unhashable type: 'slice'
+2018-09-25 11:25:21,307 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:25:21,361 - CRITICAL - __main__ - unhashable type: 'slice'
+2018-09-25 11:32:03,285 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:32:03,334 - CRITICAL - __main__ - unhashable type: 'slice'
+2018-09-25 11:32:04,381 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:32:04,430 - CRITICAL - __main__ - unhashable type: 'slice'
+2018-09-25 11:32:06,768 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:32:06,810 - CRITICAL - __main__ - unhashable type: 'slice'
+2018-09-25 11:32:30,209 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:32:30,263 - CRITICAL - __main__ - unhashable type: 'slice'
+2018-09-25 11:32:31,450 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:32:31,499 - CRITICAL - __main__ - unhashable type: 'slice'
+2018-09-25 11:32:32,311 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:32:32,359 - CRITICAL - __main__ - unhashable type: 'slice'
+2018-09-25 11:32:33,292 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:32:33,340 - CRITICAL - __main__ - unhashable type: 'slice'
+2018-09-25 11:33:43,345 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:35:00,349 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:35:00,406 - CRITICAL - __main__ - unhashable type: 'slice'
+2018-09-25 11:35:02,283 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:35:02,331 - CRITICAL - __main__ - unhashable type: 'slice'
+2018-09-25 11:36:01,634 - DEBUG - __main__ - title2titles Logging
+2018-09-25 11:36:49,765 - DEBUG - __main__ - title2titles Logging

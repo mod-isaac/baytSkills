@@ -27,10 +27,6 @@ BAYT_PG_PORT                    =   '5435'
 BAYT_PG_USERNAME                =   'baytpg'
 BAYT_PG_PASSWORD                =   'casi02'
 ################################Mongo I/O INFO####################################
-MONGO_PORT                      =   '27017'
-MONGO_CLIENT                    =   'mongodb'
-MONGO_HOST                      =   'localhost'
-MONGO_POOL                      =   'baytSkills'
 MONGO_RAW_COLLECTION            =   'csv_skills_clean'
 MONGO_TFIDF_COLLECTION          =   'tfidf_skills'
 MONGO_SVD_COLLECTION            =   'svd_skills'
@@ -44,11 +40,11 @@ MONGO_CSV_EXPS                  =   'csv_experinces_agg'
 MONGO_SKILLS_TEMP               =   'csv_skills'
 MONGO_EXPS_TEMP                 =   'csv_experinces'
 ################################Data Info####################################
-CSV_BATCH_LIMIT                 =   100
-AGGRIGATION_LIMIT               =   100
+CSV_BATCH_LIMIT                 =   1000
+AGGRIGATION_LIMIT               =   1000
 KMEAN_NCLUSTERS                 =   200
 ################################FILES Info###################################
-JOINED_CSV                      =   'DataSets/163109-short.csv'
-SKILLS_CSV                      =   'allSkills.csv'
-EXPERINCE_CSV                   =   'allTitles.csv'
-MORE_THAN                       =   2
+SKILLS_CSV                      =   'bayt/software/app/allSkills.csv'
+EXPERINCE_CSV                   =   'bayt/software/app/allTitles.csv'
+
+MORE_THAN                       =   0

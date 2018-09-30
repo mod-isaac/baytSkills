@@ -1,7 +1,7 @@
 import pgqueries
 from datacleaining import vectorCleaner
 import sys
-sys.path.append('../connections')
+sys.path.append('/bayt/software/app/baytSkills/connections')
 import connectionsmanager
 
 role                    = connectionsmanager.connManager.ROLE

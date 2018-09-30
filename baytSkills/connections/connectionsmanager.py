@@ -1,10 +1,13 @@
 import connectionsinfo
-
+import mongoConfig
+import logging
+import urllib.parse
 class ConnectionsManager(object):
     """Managing PG and Mongo connections info"""
     ROLE                    =   ""
     BATCHLIMIT              =   ""
-    MONGO_DB                =   connectionsinfo.MONGO_POOL
+    MONGO_DB                =   mongoConfig.MONGO_POOL
+    MONGO_DB_R              =   mongoConfig.MONGO_POOL_R
     MONGO_RAW_COLL          =   connectionsinfo.MONGO_RAW_COLLECTION
     MONGO_TFIDF_COLL        =   connectionsinfo.MONGO_TFIDF_COLLECTION
     MONGO_SVD_COLL          =   connectionsinfo.MONGO_SVD_COLLECTION
@@ -19,52 +22,23 @@ class ConnectionsManager(object):
     MONGO_EXPS_TEMP         =   connectionsinfo.MONGO_EXPS_TEMP
 
     def __init__(self):
-        ####Shpinx Config####
-        self.shpinxHost     = connectionsinfo.SPHINX_HOST
-        self.shpinxPort     = int(connectionsinfo.SPHINX_PORT)
 
-        ####Mongodb Config####
-        self.mongodbHost        = connectionsinfo.MONGO_HOST
-        self.mongodbClient      = connectionsinfo.MONGO_CLIENT
-        self.mongodbPort        = connectionsinfo.MONGO_PORT
-        self.mongodbPool        = connectionsinfo.MONGO_POOL
 
-        ####Postgres Config####
-        self.pgName         = connectionsinfo.PG_CORE_DATABASE_NAME
-        self.pgHost         = connectionsinfo.PG_CORE_HOST
-        self.pgPort         = connectionsinfo.PG_CORE_PORT
-        self.pgUsername     = connectionsinfo.PG_CORE_USERNAME
-        self.pgPassword     = connectionsinfo.PG_CORE_PASSWORD
+        ####Data Processing Mongodb Config####
+        self.mongodbHost        = mongoConfig.MONGO_HOST
+        self.mongodbClient      = mongoConfig.MONGO_CLIENT
+        self.mongodbPort        = mongoConfig.MONGO_PORT
+        self.mongodbUserName    = mongoConfig.MONGO_USERNAME
+        self.mongodbPassword    = mongoConfig.MONGO_PASSWORD
+        self.mongodbPool        = mongoConfig.MONGO_POOL
 
-    def sphinxReadExe(self,stmt):
-        import MySQLdb
-        host    = self.shpinxHost
-        port    = self.shpinxPort
-        try:
-            spx_db = MySQLdb.connect(host=host,port=port,charset='utf8')
-            cur = spx_db.cursor()
-            cur.execute(stmt)
-            res = cur.fetchall()
-            spx_db.close()
-            return res
-        except Exception as e:
-            print('Failed to connect Shpinx\n', e)
-
-    def pgCoreReadExe(self,stmt):
-        import psycopg2
-        name        =   self.pgName
-        user        =   self.pgUsername
-        host        =   self.pgHost
-        password    =   self.pgPassword
-        try:
-            pg_db = psycopg2.connect(dbname=name, user=user, host=host, password=password)
-            cur = pg_db.cursor()
-            cur.execute(stmt)
-            res = cur.fetchall()
-            pg_db.close()
-            return res
-        except Exception as e:
-            print('Failed to connect PGCore\n', e)
+        ####Web service Mongodb Config####
+        self.mongodbHost_R        = mongoConfig.MONGO_HOST_R
+        self.mongodbClient_R      = mongoConfig.MONGO_CLIENT_R
+        self.mongodbPort_R        = mongoConfig.MONGO_PORT_R
+        self.mongodbUserName_R    = mongoConfig.MONGO_USERNAME_R
+        self.mongodbPassword_R    = mongoConfig.MONGO_PASSWORD_R
+        self.mongodbPool_R        = mongoConfig.MONGO_POOL_R
 
     def mongodbConnectionInfo(self):
         from pymongo import MongoClient
@@ -72,7 +46,24 @@ class ConnectionsManager(object):
         host        = self.mongodbHost
         port        = self.mongodbPort
         pool        = self.mongodbPool
-        client      = MongoClient(client+'://'+host+':'+port+'/')
+        user        = self.mongodbUserName
+        pw          = self.mongodbPassword
+        try:
+            client      = MongoClient(client+'://'+user+':'+urllib.parse.quote(pw)+'@'+host+':'+port+'/'+pool)
+        except Exception as e:
+             print(e)
         return client
-
+    def mongodbConnectionInfo_R(self):
+        from pymongo import MongoClient
+        client      = self.mongodbClient_R
+        host        = self.mongodbHost_R
+        port        = self.mongodbPort_R
+        pool        = self.mongodbPool_R
+        user        = self.mongodbUserName_R
+        pw          = self.mongodbPassword_R
+        try:
+            client      = MongoClient(client+'://'+user+':'+urllib.parse.quote(pw)+'@'+host+':'+port+'/'+pool)
+        except Exception as e:
+             print(e)
+        return client
 connManager = ConnectionsManager()

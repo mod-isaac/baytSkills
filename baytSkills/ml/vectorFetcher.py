@@ -1,8 +1,14 @@
 import pymongo
 from pymongo import MongoClient
 import sys
-sys.path.append('../connections')
-sys.path.append('../nlp')
+sys.path.append('/bayt/software/app/baytSkills/connections')
+import mongoConfig
+root_path = mongoConfig.ROOT_PATH
+
+
+nlp_path    = root_path+'nlp'
+sys.path.append(nlp_path)
+
 import datacleaining
 
 import connectionsmanager
@@ -33,10 +39,18 @@ def getSkillsDocsList(limit=""):
     skillsVectors = []
     skillsVectorsDict = []
     dictList = {}
+    u_ids = []
     if limit == "":
         skillsList = list(raw_collection.find({},{"_id":False,"skills": True}))
     else:
-        skillsList = list(raw_collection.find({},{"_id":False,"doc_id": True,"skills": True}).limit(limit))
+        skillsList = list(raw_collection.find({"status": {"$ne":"yes"}},{"_id":False,"doc_id": True,"skills": True}).limit(limit))
+        for u_id in skillsList:
+            u_ids.append(u_id['doc_id'])
+        for DocId in u_ids:
+            try:
+                raw_collection.update_one({"doc_id":DocId},{"$set": {"status":"yes"}}, upsert=True)
+            except Exception as e:
+                print(e)
     for doc in skillsList:
         for key,val in doc.items():
             skillsVectors.append(val)
